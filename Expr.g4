@@ -1,15 +1,21 @@
 grammar Expr;
 
-prog: (expr NEWLINE)*;
+// Program is a sequence of statements
+prog  : stat+;
+
+stat  : expr NEWLINE          #print
+      | ID '=' expr NEWLINE   #assign
+      | NEWLINE               #blank
+      ;
 
 // ANTLR4 : Left recursion!
 // Operator precedence matches order of definition
-expr  : '-' expr                // Unary minus
-      | expr ('*' | '/' ) expr
-      | expr ('+' | '-' ) expr
-      | INT
-      | ID
-      | '(' expr ')'
+expr  : '-' expr               #uminus // Unary minus
+      | expr ('*' | '/' ) expr #MulDiv
+      | expr ('+' | '-' ) expr #AddSub
+      | INT                    #int     
+      | ID                     #id
+      | '(' expr ')'           #parens
       ;
 
 INT   : [0-9]+ ;
