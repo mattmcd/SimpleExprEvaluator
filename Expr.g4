@@ -11,12 +11,17 @@ stat  : expr NEWLINE          #print
 // ANTLR4 : Left recursion!
 // Operator precedence matches order of definition
 expr  : '-' expr               #uminus // Unary minus
-      | expr ('*' | '/' ) expr #MulDiv
-      | expr ('+' | '-' ) expr #AddSub
+      | expr op=('*' | '/' ) expr #MulDiv
+      | expr op=('+' | '-' ) expr #AddSub
       | INT                    #int     
       | ID                     #id
       | '(' expr ')'           #parens
       ;
+
+MUL   : '*';
+DIV   : '/';
+ADD   : '+';
+SUB   : '-';
 
 INT   : [0-9]+ ;
 ID    : [a-z]+ ;
