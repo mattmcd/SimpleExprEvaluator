@@ -4,6 +4,7 @@ grammar Expr;
 prog  : stat+;
 
 stat  : expr NEWLINE          #print
+      | CLEAR                 #clear
       | ID '=' expr NEWLINE   #assign
       | NEWLINE               #blank
       ;
@@ -22,6 +23,9 @@ MUL   : '*';
 DIV   : '/';
 ADD   : '+';
 SUB   : '-';
+
+// Keywords
+CLEAR : 'clear'; 
 
 INT   : [0-9]+ ;
 ID    : [a-z]+ ;

@@ -21,9 +21,20 @@ public class EvalListener extends ExprBaseListener {
 
   @Override public void exitId(ExprParser.IdContext ctx) { 
     LOGGER.info( "Exiting Id" );
-    LOGGER.info( "  Pushing value of " + 
-        ctx.ID().getText() + " to stack" );
-    theStack.push( map.get( ctx.ID().getText()));
+    String id = ctx.ID().getText();
+    LOGGER.info( "  Pushing value of " + id + " to stack" );
+    if ( map.containsKey(id) ) {
+      theStack.push( map.get(id) );
+    } else {
+      LOGGER.severe(id + " not declared.");
+    }
+  }
+
+  @Override public void exitClear(ExprParser.ClearContext ctx) {
+    LOGGER.info("Exiting Clear");
+    theStack.clear();
+    theStack.trimToSize();
+    map.clear();
   }
 
   @Override public void enterAssign(ExprParser.AssignContext ctx) { 
@@ -62,7 +73,9 @@ public class EvalListener extends ExprBaseListener {
   @Override 
     public void exitPrint(ExprParser.PrintContext ctx) { 
       LOGGER.info( "Exiting Print" );
-      System.out.println( theStack.pop());
+      if ( !theStack.empty() ) {
+        System.out.println( theStack.pop());
+      }
     }
 
   @Override 
