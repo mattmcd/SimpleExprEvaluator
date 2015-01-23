@@ -1,5 +1,10 @@
 all: Expr.class
 
+js: Expr.js
+
+Expr.js:
+	antlr4 -o js -Dlanguage=JavaScript Expr.g4
+
 ExprParser.java: Expr.g4
 	antlr4 Expr.g4
 
