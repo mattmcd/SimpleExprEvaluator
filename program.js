@@ -12,6 +12,8 @@ var tree = parser.prog();
 // Add a listener to report values found
 AssignPrinter = function() {
   ExprListener.ExprListener.call(this); // inherit default listener
+  this.theStack = [];  // Execution stack
+  this.map = {};       // Variable map
   return this;
 };
 
@@ -20,10 +22,21 @@ AssignPrinter.prototype = Object.create(ExprListener.ExprListener.prototype);
 AssignPrinter.prototype.constructor = AssignPrinter;
 
 // override default listener behavior
+AssignPrinter.prototype.exitId = function(ctx) {
+    //LOGGER.info( "Exiting Id" );
+    var id = ctx.ID().getText();
+    // LOGGER.info( "  Pushing value of " + id + " to stack" );
+    if ( map.containsKey(id) ) {
+      theStack.push( map.[id] );
+    } else {
+      // LOGGER.severe(id + " not declared.");
+    }
+  }
+
 AssignPrinter.prototype.exitAssign =
-function(ctx) {      
+function(ctx) {
   document.writeln( "Variable Assignment: " + ctx.ID().getText() );
-}; 
+};
 
 // Actually do the walking
 var printer = new AssignPrinter();
