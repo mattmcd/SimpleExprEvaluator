@@ -1,92 +1,74 @@
-public class EvalListener extends ExprBaseListener {
-  private Stack<Integer> theStack = new Stack<Integer>(); 
-  private Map<String,Integer> map = new HashMap<String,Integer>();
-  private final static Logger LOGGER = Logger.getLogger(
-      EvalListener.class.getName());
+// Add a listener to report values found
+EvalListener = function() {
+  ExprListener.ExprListener.call(this); // inherit default listener
+  this.theStack = [];  // Execution stack
+  this.map = {};       // Variable map
+  return this;
+};
 
-  public EvalListener( ) {
-    this.theStack = [];
-    this.map = {};
-    this.LOGGER = {};
-    LOGGER.setLevel(Level.SEVERE);
+// inherit default listener
+EvalListener.prototype = Object.create(ExprListener.ExprListener.prototype);
+EvalListener.prototype.constructor = EvalListener;
+
+// override default listener behavior
+EvalListener.prototype.exitId = function(ctx) {
+  //LOGGER.info( "Exiting Id" );
+  var id = ctx.ID().getText();
+  // LOGGER.info( "  Pushing value of " + id + " to stack" );
+  if ( this.map.hasOwnProperty(id) ) {
+    this.theStack.push( this.map[id] );
+  } else {
+    // LOGGER.severe(id + " not declared.");
   }
-
-  public void setVerbose( boolean isVerbose ) {
-    if ( isVerbose ) LOGGER.setLevel(Level.INFO);
-    else LOGGER.setLevel(Level.SEVERE);
-  }
-
-  @Override public void exitId(ExprParser.IdContext ctx) { 
-    LOGGER.info( "Exiting Id" );
-    String id = ctx.ID().getText();
-    LOGGER.info( "  Pushing value of " + id + " to stack" );
-    if ( map.containsKey(id) ) {
-      theStack.push( map.get(id) );
-    } else {
-      LOGGER.severe(id + " not declared.");
-    }
-  }
-
-  @Override public void exitClear(ExprParser.ClearContext ctx) {
-    LOGGER.info("Exiting Clear");
-    theStack.clear();
-    theStack.trimToSize();
-    map.clear();
-  }
-
-  @Override public void enterAssign(ExprParser.AssignContext ctx) { 
-    LOGGER.info( "Entering Assign" );
-  }
-  @Override public void exitAssign(ExprParser.AssignContext ctx) { 
-    LOGGER.info( "Exiting Assign" );
-    map.put( ctx.ID().getText(), theStack.pop());
-  }
-
-  @Override 
-    public void exitUminus(ExprParser.UminusContext ctx) { 
-      theStack.push(-theStack.pop());
-    }
-
-  @Override 
-    public void exitInt(ExprParser.IntContext ctx) { 
-      LOGGER.info( "Exiting Int" );
-      theStack.push( Integer.parseInt( ctx.INT().getText() ));
-    }
-
-  @Override 
-    public void exitAddSub(ExprParser.AddSubContext ctx) { 
-      LOGGER.info( "Exiting AddSub" );
-      int b = theStack.pop();
-      int a = theStack.pop();
-      int result;
-      if (ctx.op.getType() == ExprParser.ADD ) {
-        result = a+b;
-      } else {
-        result = a-b;
-      }
-      theStack.push( result );
-    }
-
-  @Override 
-    public void exitPrint(ExprParser.PrintContext ctx) { 
-      LOGGER.info( "Exiting Print" );
-      if ( !theStack.empty() ) {
-        System.out.println( theStack.pop());
-      }
-    }
-
-  @Override 
-    public void exitMulDiv(ExprParser.MulDivContext ctx) { 
-      LOGGER.info( "Exiting MulDiv" );
-      int b = theStack.pop();
-      int a = theStack.pop();
-      int result;
-      if (ctx.op.getType() == ExprParser.MUL) {
-        result = a*b;
-      } else {
-        result = a/b;
-      }
-      theStack.push( result );
-    }
-
 }
+
+EvalListener.prototype.exitAssign =
+function(ctx) {
+  this.map[ctx.ID().getText()] = this.theStack.pop();
+};
+
+EvalListener.prototype.exitInt = function(ctx) {
+  // LOGGER.info( "Exiting Int" );
+  this.theStack.push( parseInt( ctx.INT().getText() ));
+}
+
+EvalListener.prototype.exitPrint = function( ctx) {
+  //LOGGER.info( "Exiting Print" );
+  if ( !this.theStack.length < 1 ) {
+    outText.value += this.theStack.pop() + "\n";
+  }
+}
+
+EvalListener.prototype.exitClear = function(ctx) {
+  // LOGGER.info("Exiting Clear");
+  this.theStack = [];
+  this.map = {};
+}
+
+EvalListener.prototype.exitAddSub = function(ctx) {
+  //LOGGER.info( "Exiting AddSub" );
+  var b = this.theStack.pop();
+  var a = this.theStack.pop();
+  var result;
+  if (ctx.op.type == ExprParser.ExprParser.ADD ) {
+    result = a+b;
+  } else {
+    result = a-b;
+  }
+  this.theStack.push( result );
+}
+
+EvalListener.prototype.exitMulDiv = function(ctx) { 
+  // LOGGER.info( "Exiting MulDiv" );
+  b = this.theStack.pop();
+  a = this.theStack.pop();
+  var result;
+  if (ctx.op.type == ExpreParser.ExprParser.MUL) {
+    result = a*b;
+  } else {
+    result = a/b;
+  }
+  this.theStack.push( result );
+}
+
+exports.EvalListener = EvalListener;
