@@ -11,7 +11,6 @@ def main(argv):
     lexer = ExprLexer(chars);
     tokens = CommonTokenStream(lexer);
     parser = ExprParser(tokens);
-    # parser.buildParseTrees = true;
     tree = parser.prog();
 
     # Actually do the walking
