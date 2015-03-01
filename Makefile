@@ -4,6 +4,9 @@ js: Expr.js
 
 python: ExprParser.py
 
+install_python: 
+	pip install -r requirements.txt
+
 ExprParser.js: Expr.g4
 	antlr4 -Dlanguage=JavaScript Expr.g4
 
