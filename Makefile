@@ -1,30 +1,33 @@
-all: Expr.class
+all: Expr.class js/ExprParser.js java/ExprParser.java expr/ExprParser.py
 
-js: Expr.js
+js: js/ExprParser.js
 
-python: ExprParser.py
+python: expr/ExprParser.py
 
 install_python: 
 	pip install -r requirements.txt
 
-ExprParser.js: Expr.g4
-	antlr4 -Dlanguage=JavaScript Expr.g4
+js/ExprParser.js: Expr.g4
+	antlr4 -o js -Dlanguage=JavaScript Expr.g4
 
-ExprParser.java: Expr.g4
-	antlr4 Expr.g4
+java/ExprParser.java: Expr.g4
+	antlr4 -o java Expr.g4
 
-ExprParser.py: Expr.g4
-	antlr4 -Dlanguage=Python2 Expr.g4
+expr/ExprParser.py: Expr.g4
+	antlr4 -o expr -Dlanguage=Python2 Expr.g4
+	touch expr/__init__.py
 
-Expr.class: ExprParser.java Expr.java EvalListener.java
-	javac Expr*.java
+Expr.class: java/ExprParser.java Expr.java EvalListener.java
+	javac java/*.java Expr*.java
 
-generatedFiles = ExprLexer.java ExprParser.java ExprListener.java ExprBaseListener.java 
+generatedFiles = ExprLexer.* ExprParser.* ExprListener.* ExprBaseListener.*
 
 clean:
-	rm -f $(generatedFiles) *.class *.tokens
+	rm -f java/*
+	rm -f js/*
+	rm -f expr/*
 
-grun= java org.antlr.v4.runtime.misc.TestRig
+grun= java -cp java:$$CLASSPATH org.antlr.v4.runtime.misc.TestRig
 test: Expr.class
 	$(grun) Expr prog -tokens test.txt
 

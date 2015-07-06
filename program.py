@@ -1,6 +1,6 @@
 from antlr4 import *
-from ExprLexer import ExprLexer
-from ExprParser import ExprParser
+from expr.ExprLexer import ExprLexer
+from expr.ExprParser import ExprParser
 from EvalListener import EvalListener
 
 def main(argv):
