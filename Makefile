@@ -22,10 +22,9 @@ Expr.class: java/ExprParser.java Expr.java EvalListener.java
 
 generatedFiles = ExprLexer.* ExprParser.* ExprListener.* ExprBaseListener.*
 
+OUTDIRS = java js expr
 clean:
-	rm -f java/*
-	rm -f js/*
-	rm -f expr/*
+	for OUTDIR in $(OUTDIRS); do rm -f $$OUTDIR/* ; done
 
 grun= java -cp java:$$CLASSPATH org.antlr.v4.runtime.misc.TestRig
 test: Expr.class
