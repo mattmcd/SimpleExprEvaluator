@@ -27,7 +27,8 @@ clean:
 	for OUTDIR in $(OUTDIRS); do rm -f $$OUTDIR/* ; done
 
 grun= java -cp java:$$CLASSPATH org.antlr.v4.runtime.misc.TestRig
-test: Expr.class
+.PHONY: test
+test: 
 	$(grun) Expr prog -tokens test.txt
 
 test_python:
