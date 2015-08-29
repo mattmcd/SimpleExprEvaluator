@@ -8,8 +8,9 @@
     var ExprListener = require("js/ExprListener.js");
     var EvalListener = require("EvalListener.js");
   </script>
+  <script src="program.js"></script>
 </head>
-<body>
+<body onLoad="pageDidLoad()">
   <p>
     Input:
     <textarea rows="10" cols="40" id="Input">
@@ -20,7 +21,8 @@
     <textarea rows="10" cols="40" id="Output">
     </textarea>
   </p>
-
-  <script src="program.js"></script>
+  <p>
+    <button id="eval">Eval</button>
+  </p>
 </body>
 </HTML>

@@ -1,8 +1,9 @@
 // Add a listener to report values found
-EvalListener = function() {
+EvalListener = function(outText) {
   ExprListener.ExprListener.call(this); // inherit default listener
   this.theStack = [];  // Execution stack
   this.map = {};       // Variable map
+  this.outText = outText; // Widget for output
   return this;
 };
 
@@ -35,7 +36,7 @@ EvalListener.prototype.exitInt = function(ctx) {
 EvalListener.prototype.exitPrint = function( ctx) {
   //LOGGER.info( "Exiting Print" );
   if ( !this.theStack.length < 1 ) {
-    outText.value += this.theStack.pop() + "\n";
+    this.outText.value += this.theStack.pop() + "\n";
   }
 }
 
@@ -63,7 +64,7 @@ EvalListener.prototype.exitMulDiv = function(ctx) {
   b = this.theStack.pop();
   a = this.theStack.pop();
   var result;
-  if (ctx.op.type == ExpreParser.ExprParser.MUL) {
+  if (ctx.op.type == ExprParser.ExprParser.MUL) {
     result = a*b;
   } else {
     result = a/b;
