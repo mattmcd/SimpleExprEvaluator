@@ -12,13 +12,9 @@ function pageDidLoad() {
 }
 
 function evalCb() {
-  input = getInput();
-  if (input.charAt(input.length-1) !== '\n') {
-    input = input + '\n';
-  }
+  input = getInput() + '\n'; // Ensure ends in newline
   var outText = document.getElementById("Output");
-  outText.value = ''; 
-  evaluate(input, outText);
+  outText.value = evaluate(input);
 }
 
 function getInput() {
@@ -35,6 +31,7 @@ function evaluate(input, outText){
   var tree = parser.prog();
 
   // Actually do the walking
-  var evaluator = new EvalListener.EvalListener(outText);
+  var evaluator = new EvalListener.EvalListener();
   antlr4.tree.ParseTreeWalker.DEFAULT.walk(evaluator, tree);
+  return evaluator.result;
 }

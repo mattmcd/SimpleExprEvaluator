@@ -3,7 +3,7 @@ EvalListener = function(outText) {
   ExprListener.ExprListener.call(this); // inherit default listener
   this.theStack = [];  // Execution stack
   this.map = {};       // Variable map
-  this.outText = outText; // Widget for output
+  this.result = ''; // Output 
   return this;
 };
 
@@ -36,7 +36,7 @@ EvalListener.prototype.exitInt = function(ctx) {
 EvalListener.prototype.exitPrint = function( ctx) {
   //LOGGER.info( "Exiting Print" );
   if ( !this.theStack.length < 1 ) {
-    this.outText.value += this.theStack.pop() + "\n";
+    this.result += this.theStack.pop() + "\n";
   }
 }
 
