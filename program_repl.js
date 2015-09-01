@@ -25,6 +25,7 @@ function make_evaluator() {
       str = 
         '| Expression Evaluator \n' +
         '| e.g. a=1 b=2 a+b a*b a/b a-b\n' + 
+        '| \'clear\' clears variable definitions\n' + 
         '| Expressions must be separated by newlines.\n';
       return str; }
   };
