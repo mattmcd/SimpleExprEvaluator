@@ -2,6 +2,7 @@ function make_repl(node, make_evaluator) {
   var cmd_prompt = '>>';
   var entry_start = 0;
   var my_evaluator;
+  var content;
 
   if (typeof make_evaluator === 'undefined') {
     my_evaluator = {
@@ -45,12 +46,13 @@ function make_repl(node, make_evaluator) {
     var endInd = node.selectionEnd;
     var c = cmd.slice(startInd, endInd);
     // console.log('Read a character: ' + c);
-    if (startInd < entry_start) {
-      remove_char(startInd, endInd);
+    if (startInd < entry_start-1) {
+      // Attempting to edit 
+      node.value = content;
       move_selection(node.value.length);
-    } else {
-      handle_char(c);
     }
+    handle_char(c);
+    content = node.value;
   }
 
   function handle_char(c) {
@@ -68,6 +70,7 @@ function make_repl(node, make_evaluator) {
   node.value = '';
   print_intro();
   print_prompt();
+  content = node.value;
   return {readChar: read_char};
 }
 
