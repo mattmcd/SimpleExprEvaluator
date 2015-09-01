@@ -8,4 +8,8 @@ approach used here.
 
 The ANTLR 4.5 release (January 2015) has runtime targets for JavaScript and Python.  
 The EvalListener.js and EvalListener.py replicate the stack based
-Evaluator.java using these runtimes.
+Evaluator.java using these runtimes.  EvalAnnotatorListener.py in contrast
+uses node annotation to construct the result.
+
+[Online
+demo](http://www.matt-mcdonnell.com/code/SimpleExprEvaluator/index.html)
