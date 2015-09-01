@@ -19,7 +19,8 @@ EvalListener.prototype.exitId = function(ctx) {
   if ( this.map.hasOwnProperty(id) ) {
     this.theStack.push( this.map[id] );
   } else {
-    // LOGGER.severe(id + " not declared.");
+    // Variable not declared, push NaN to stack.
+    this.theStack.push( NaN );
   }
 }
 

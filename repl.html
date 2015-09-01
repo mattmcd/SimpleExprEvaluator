@@ -1,0 +1,20 @@
+<HTML>
+<head>
+  <script src="lib/require.js"></script>
+  <script>
+    var antlr4=require("antlr4/index");
+    var ExprLexer = require("js/ExprLexer.js");
+    var ExprParser = require("js/ExprParser.js");
+    var ExprListener = require("js/ExprListener.js");
+    var EvalListener = require("EvalListener.js");
+  </script>
+  <script src="program_repl.js"></script> 
+  <script src="repl.js"></script>
+</head>
+<body onLoad="init()">
+  <p>
+    Expression evaluator REPL
+    <textarea rows="25" cols="80" id="cmdline"></textarea>
+  </p>
+</body>
+</HTML>
