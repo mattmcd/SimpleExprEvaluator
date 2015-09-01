@@ -8,13 +8,21 @@
     var ExprListener = require("js/ExprListener.js");
     var EvalListener = require("EvalListener.js");
   </script>
-  <script src="program_repl.js"></script> 
-  <script src="repl.js"></script>
+  <script src="program.js"></script>
 </head>
-<body onLoad="init()">
+<body onLoad="pageDidLoad()">
   <p>
-    Expression evaluator REPL
-    <textarea rows="25" cols="80" id="cmdline"></textarea>
+    Input:
+    <textarea rows="10" cols="40" id="Input">
+    </textarea>
+  </p>
+  <p>
+    Output:
+    <textarea rows="10" cols="40" id="Output">
+    </textarea>
+  </p>
+  <p>
+    <button id="eval">Eval</button>
   </p>
 </body>
 </HTML>
