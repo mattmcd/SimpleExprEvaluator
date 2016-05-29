@@ -1,62 +1,63 @@
 from expr.ExprListener import ExprListener
 from expr.ExprParser import ExprParser
+
+
 # Add a listener to report values found
 # Annotate the nodes to store intermediate values
 class EvalAnnotatorListener(ExprListener):
     def __init__(self):
-        self.values = {};   # Map from node to value
-        self.map = {};      # Variable map
+        self.values = {}  # Map from node to value
+        self.map = {}  # Variable map
 
-    def setValue(self, node, val):
+    def set_value(self, node, val):
         self.values[node] = val
 
-    def getValue(self, node):
+    def get_value(self, node):
         return self.values[node]
 
     # override default listener behavior
-    def exitId(self,ctx) : 
-        #LOGGER.info( "Exiting Id" );
-        id = ctx.ID().getText();
-        # LOGGER.info( "  Pushing value of " + id + " to stack" );
-        if ( self.map.has_key(id) ) : 
-            self.setValue(ctx, self.map[id]);
+    def exitId(self, ctx):
+        # LOGGER.info( "Exiting Id" );
+        var_id = ctx.ID().getText()
+        # LOGGER.info( "  Pushing value of " + var_id + " to stack" );
+        if var_id in self.map:
+            self.set_value(ctx, self.map[var_id])
 
-    def exitAssign(self, ctx) : 
-        self.map[ctx.ID().getText()] = self.getValue(ctx.expr());
+    def exitAssign(self, ctx):
+        self.map[ctx.ID().getText()] = self.get_value(ctx.expr())
 
-    def exitInt(self,ctx) :
+    def exitInt(self, ctx):
         # LOGGER.info( "Exiting Int" );
-        self.setValue( ctx, int( ctx.INT().getText() ));
+        self.set_value(ctx, int(ctx.INT().getText()))
 
-    def exitPrint(self, ctx) :
-        #LOGGER.info( "Exiting Print" );
+    def exitPrint(self, ctx):
+        # LOGGER.info( "Exiting Print" );
         try:
-            print self.getValue(ctx.expr());
-        except:
+            print self.get_value(ctx.expr())
+        except KeyError:
             print 'Value not found'
 
-    def exitClear(self,ctx) :
+    def exitClear(self, ctx):
         # LOGGER.info("Exiting Clear");
-        self.value = {};
-        self.map = {};
+        self.values = {}
+        self.map = {}
 
-    def exitAddSub(self,ctx) :
-        #LOGGER.info( "Exiting AddSub" );
-        b = self.getValue(ctx.expr(1));
-        a = self.getValue(ctx.expr(0));
-        if (ctx.op.type == ExprParser.ADD ) :
-            result = a+b;
+    def exitAddSub(self, ctx):
+        # LOGGER.info( "Exiting AddSub" );
+        b = self.get_value(ctx.expr(1))
+        a = self.get_value(ctx.expr(0))
+        if ctx.op.type == ExprParser.ADD:
+            result = a + b
         else:
-            result = a-b;
-        self.setValue( ctx, result );
+            result = a - b
+        self.set_value(ctx, result)
 
-    def exitMulDiv(self,ctx) :
+    def exitMulDiv(self, ctx):
         # LOGGER.info( "Exiting MulDiv" );
-        b = self.getValue(ctx.expr(1));
-        a = self.getValue(ctx.expr(0));
-        if (ctx.op.type == ExprParser.MUL) :
-            result = a*b;
-        else :
-            result = a/b; # Integer divisiion?
-        self.setValue( ctx, result );
-
+        b = self.get_value(ctx.expr(1))
+        a = self.get_value(ctx.expr(0))
+        if ctx.op.type == ExprParser.MUL:
+            result = a * b
+        else:
+            result = a / b  # Integer division?
+        self.set_value(ctx, result)

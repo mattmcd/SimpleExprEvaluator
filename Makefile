@@ -33,6 +33,9 @@ test:
 
 test_python:
 	python program.py
+
+test_python_annotator:
+	python program_annotator.py
 	
 serve:
 	python -m SimpleHTTPServer 8000
